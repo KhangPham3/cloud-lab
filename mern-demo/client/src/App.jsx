@@ -10,6 +10,7 @@ const API_URL = 'https://ubiquitous-trout-5g4647594j9xf77g5-5000.app.github.dev/
 function App() {
   const [count, setCount] = useState(0);
   const [students, setStudents] = useState([]);
+  const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
     mssv: '',
     name: '',
@@ -45,28 +46,53 @@ function App() {
 
   // 3. Hàm gửi form thêm sinh viên
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  try {
+    const url = editId ? `${API_URL}/${editId}` : API_URL;
+    const method = editId ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    if (res.ok) {
+      alert(editId ? 'Cập nhật thành công!' : 'Thêm thành công!');
+      setFormData({ mssv: '', name: '', email: '' });
+      setEditId(null);
+      fetchStudents(); // Gọi lại GET để làm mới danh sách
+    }
+  } catch (error) {
+    console.error('Lỗi khi lưu dữ liệu:', error);
+  }
+};
+
+  const handleEdit = (student) => {
+    setEditId(student._id);
+    setFormData({
+      mssv: student.mssv,
+      name: student.name,
+      email: student.email
+    });
+  };
+
+  const handleDelete = async (id) => {
+  if (window.confirm('Bạn có chắc chắn muốn xóa sinh viên này?')) {
     try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE'
       });
 
       if (res.ok) {
-        alert('Thêm sinh viên thành công!');
-        setFormData({ mssv: '', name: '', email: '' });
-        fetchStudents();
-      } else {
-        const errorData = await res.json();
-        alert(`Lỗi: ${errorData.message || 'Không thể thêm sinh viên'}`);
+        alert('Đã xóa sinh viên thành công!');
+        fetchStudents(); // Tải lại danh sách sau khi xóa
       }
     } catch (error) {
-      console.error('Lỗi khi gửi yêu cầu thêm sinh viên:', error);
+      console.error('Lỗi khi xóa sinh viên:', error);
     }
-  };
+  }
+};
 
   return (
     <>
@@ -208,6 +234,8 @@ function App() {
             {students.map((student) => (
               <li key={student._id || student.mssv} style={{ padding: '8px', borderBottom: '1px solid #444' }}>
                 <strong>{student.mssv}</strong> - {student.name} ({student.email})
+                 <button onClick={() => handleEdit(student)}>Sửa</button>
+                  <button onClick={() => handleDelete(student._id)} style={{ color: 'red' }}>Xóa</button>
               </li>
             ))}
           </ul>
