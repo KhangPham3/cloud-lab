@@ -1,0 +1,21 @@
+services:
+  client:
+    build: ./mern-demo/client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    restart: unless-stopped
+
+  server:
+    build: ./mern-demo/server
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./mern-demo/.env
+    restart: unless-stopped
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb+srv://khangkgfc123456_db_user:Wa3WTZmZC9wo1TXR@cluster0.caf2dlq.mongodb.net/cloud-lab?appName=Cluster0
+
+    

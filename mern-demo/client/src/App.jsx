@@ -5,7 +5,8 @@ import viteLogo from './assets/vite.svg';
 import './App.css';
 
 // Endpoint kết nối tới Server Backend
-const API_URL = 'https://ubiquitous-trout-5g4647594j9xf77g5-5000.app.github.dev/api/students';
+//const API_URL = 'https://ubiquitous-trout-5g4647594j9xf77g5-5000.app.github.dev/api/students';
+const API_URL = 'http://localhost:5000/api/students';
 
 function App() {
   const [count, setCount] = useState(0);
