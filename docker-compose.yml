@@ -1,8 +1,6 @@
 services:
   client:
-    #build: ./mern-demo/client
-    image: marvinvnrg/mern-frontend:latest
-    
+    build: ./mern-demo/client
     ports:
       - "5173:5173"
     depends_on:
@@ -10,8 +8,7 @@ services:
     restart: unless-stopped
 
   server:
-    #build: ./mern-demo/server
-    image: marvinvnrg/mern-backend:latest
+    build: ./mern-demo/server
     ports:
       - "5000:5000"
     env_file:

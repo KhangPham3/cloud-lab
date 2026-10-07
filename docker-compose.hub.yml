@@ -1,7 +1,7 @@
 services:
   client:
     #build: ./mern-demo/client
-    image: marvinvnrg/mern-frontend:latest
+    image: marvinvnrg/mern-frontend:2.0
 
     ports:
       - "5173:5173"
@@ -10,6 +10,7 @@ services:
     restart: unless-stopped
 
   server:
+  
     #build: ./mern-demo/server
     image: marvinvnrg/mern-backend:latest
 

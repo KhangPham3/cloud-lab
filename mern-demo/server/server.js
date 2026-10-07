@@ -1,14 +1,24 @@
-const express = require('express'); 
-const mongoose = require('mongoose'); 
-const app = express();             
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
 app.use(express.json());
 const Student = require('./models/Student');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-const cors = require('cors'); 
+const cors = require('cors');
 
 
-app.use(cors()); // 2. Kích hoạt cors trước các router
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      callback(null, true); // Hoặc truyền origin cụ thể
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 // Kết nối Express Backend với MongoDB Atlas qua Mongoose
 mongoose.connect(process.env.MONGODB_URI)
@@ -18,6 +28,14 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => {
     console.error('Lỗi kết nối MongoDB:', err.message);
   });
+
+// Cấu hình CORS linh hoạt cho Production
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 
 // API Hello
 app.get('/api/hello', (req, res) => {
@@ -81,7 +99,7 @@ app.delete('/api/students/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}); 
+});
 
 app.listen(5000, () => {
   console.log('Server online tại port 5000');
