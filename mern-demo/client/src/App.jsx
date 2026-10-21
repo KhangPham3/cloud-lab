@@ -5,8 +5,8 @@ import viteLogo from './assets/vite.svg';
 import './App.css';
 
 // Endpoint kết nối tới Server Backend
-const API_URL = 'https://mern-backend-235187.onrender.com/api/students';
-console.log('App connected to API_URL:', API_URL);
+//const API_URL = 'https://ubiquitous-trout-5g4647594j9xf77g5-5000.app.github.dev/api/students';
+const API_URL = 'https://mern-frontend-235187.onrender.com/';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -19,7 +19,7 @@ function App() {
   });
 
   // 1. Hàm lấy danh sách sinh viên từ backend
-  
+
   const fetchStudents = async () => {
     try {
       const res = await fetch(API_URL);
@@ -48,27 +48,27 @@ function App() {
 
   // 3. Hàm gửi form thêm sinh viên
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const url = editId ? `${API_URL}/${editId}` : API_URL;
-    const method = editId ? 'PUT' : 'POST';
+    e.preventDefault();
+    try {
+      const url = editId ? `${API_URL}/${editId}` : API_URL;
+      const method = editId ? 'PUT' : 'POST';
 
-    const res = await fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    });
+      const res = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
 
-    if (res.ok) {
-      alert(editId ? 'Cập nhật thành công!' : 'Thêm thành công!');
-      setFormData({ mssv: '', name: '', email: '' });
-      setEditId(null);
-      fetchStudents(); // Gọi lại GET để làm mới danh sách
+      if (res.ok) {
+        alert(editId ? 'Cập nhật thành công!' : 'Thêm thành công!');
+        setFormData({ mssv: '', name: '', email: '' });
+        setEditId(null);
+        fetchStudents(); // Gọi lại GET để làm mới danh sách
+      }
+    } catch (error) {
+      console.error('Lỗi khi lưu dữ liệu:', error);
     }
-  } catch (error) {
-    console.error('Lỗi khi lưu dữ liệu:', error);
-  }
-};
+  };
 
   const handleEdit = (student) => {
     setEditId(student._id);
@@ -80,21 +80,21 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-  if (window.confirm('Bạn có chắc chắn muốn xóa sinh viên này?')) {
-    try {
-      const res = await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE'
-      });
+    if (window.confirm('Bạn có chắc chắn muốn xóa sinh viên này?')) {
+      try {
+        const res = await fetch(`${API_URL}/${id}`, {
+          method: 'DELETE'
+        });
 
-      if (res.ok) {
-        alert('Đã xóa sinh viên thành công!');
-        fetchStudents(); // Tải lại danh sách sau khi xóa
+        if (res.ok) {
+          alert('Đã xóa sinh viên thành công!');
+          fetchStudents(); // Tải lại danh sách sau khi xóa
+        }
+      } catch (error) {
+        console.error('Lỗi khi xóa sinh viên:', error);
       }
-    } catch (error) {
-      console.error('Lỗi khi xóa sinh viên:', error);
     }
-  }
-};
+  };
 
   return (
     <>
@@ -192,51 +192,39 @@ function App() {
       {/* Khu vực Quản lý Sinh viên */}
       <section style={{ maxWidth: '600px', margin: '40px auto', padding: '20px' }}>
         <h2>Quản lý Sinh viên</h2>
-        
+
         {/* Form nhập sinh viên */}
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '30px' }}>
-          <input 
-            type="text" 
-            name="mssv" 
-            placeholder="MSSV" 
-            value={formData.mssv} 
-            onChange={handleChange} 
-            required 
+          <input
+            type="text"
+            name="mssv"
+            placeholder="MSSV"
+            value={formData.mssv}
+            onChange={handleChange}
+            required
             style={{ padding: '8px' }}
           />
-          <input 
-            type="text" 
-            name="name" 
-            placeholder="Họ tên" 
-            value={formData.name} 
-            onChange={handleChange} 
-            required 
+          <input
+            type="text"
+            name="name"
+            placeholder="Họ tên"
+            value={formData.name}
+            onChange={handleChange}
+            required
             style={{ padding: '8px' }}
           />
-          <input 
-            type="email" 
-            name="email" 
-            placeholder="Email" 
-            value={formData.email} 
-            onChange={handleChange} 
-            required 
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
             style={{ padding: '8px' }}
           />
           <button type="submit" style={{ padding: '10px', background: '#007bff', color: '#fff', border: 'none', cursor: 'pointer' }}>
-            {editId ? 'Cập nhật sinh viên' : 'Thêm sinh viên'}
+            Thêm sinh viên
           </button>
-          {editId && (
-            <button
-              type="button"
-              onClick={() => {
-                setEditId(null);
-                setFormData({ mssv: '', name: '', email: '' });
-              }}
-              style={{ padding: '8px', background: '#6c757d', color: '#fff', border: 'none', cursor: 'pointer' }}
-            >
-              Hủy chỉnh sửa
-            </button>
-          )}
         </form>
 
         {/* Danh sách sinh viên */}
@@ -248,8 +236,8 @@ function App() {
             {students.map((student) => (
               <li key={student._id || student.mssv} style={{ padding: '8px', borderBottom: '1px solid #444' }}>
                 <strong>{student.mssv}</strong> - {student.name} ({student.email})
-                 <button onClick={() => handleEdit(student)}>Sửa</button>
-                  <button onClick={() => handleDelete(student._id)} style={{ color: 'red' }}>Xóa</button>
+                <button onClick={() => handleEdit(student)}>Sửa</button>
+                <button onClick={() => handleDelete(student._id)} style={{ color: 'red' }}>Xóa</button>
               </li>
             ))}
           </ul>
