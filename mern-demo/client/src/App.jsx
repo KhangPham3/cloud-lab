@@ -5,7 +5,8 @@ import viteLogo from './assets/vite.svg';
 import './App.css';
 
 // Endpoint kết nối tới Server Backend
-const API_URL = import.meta.env.VITE_API_URL || 'https://mern-backend-235187.onrender.com/api/students';
+const API_URL = 'https://mern-backend-235187.onrender.com/api/students';
+console.log('App connected to API_URL:', API_URL);
 
 function App() {
   const [count, setCount] = useState(0);
