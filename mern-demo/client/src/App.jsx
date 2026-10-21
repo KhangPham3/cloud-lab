@@ -5,8 +5,7 @@ import viteLogo from './assets/vite.svg';
 import './App.css';
 
 // Endpoint kết nối tới Server Backend
-//const API_URL = 'https://ubiquitous-trout-5g4647594j9xf77g5-5000.app.github.dev/api/students';
-const API_URL = 'http://localhost:5000/api/students';
+const API_URL = import.meta.env.VITE_API_URL || 'https://mern-backend-235187.onrender.com/api/students';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -19,6 +18,7 @@ function App() {
   });
 
   // 1. Hàm lấy danh sách sinh viên từ backend
+  
   const fetchStudents = async () => {
     try {
       const res = await fetch(API_URL);
@@ -222,8 +222,20 @@ function App() {
             style={{ padding: '8px' }}
           />
           <button type="submit" style={{ padding: '10px', background: '#007bff', color: '#fff', border: 'none', cursor: 'pointer' }}>
-            Thêm sinh viên
+            {editId ? 'Cập nhật sinh viên' : 'Thêm sinh viên'}
           </button>
+          {editId && (
+            <button
+              type="button"
+              onClick={() => {
+                setEditId(null);
+                setFormData({ mssv: '', name: '', email: '' });
+              }}
+              style={{ padding: '8px', background: '#6c757d', color: '#fff', border: 'none', cursor: 'pointer' }}
+            >
+              Hủy chỉnh sửa
+            </button>
+          )}
         </form>
 
         {/* Danh sách sinh viên */}

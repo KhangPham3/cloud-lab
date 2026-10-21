@@ -8,6 +8,14 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const cors = require('cors');
 
 
+// Cấu hình CORS linh hoạt cho Production
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'https://mern-frontend-235187.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
@@ -28,13 +36,6 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => {
     console.error('Lỗi kết nối MongoDB:', err.message);
   });
-
-// Cấu hình CORS linh hoạt cho Production
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  'http://localhost:5173',
-  'http://localhost:3000'
-];
 
 
 // API Hello
@@ -101,6 +102,13 @@ app.delete('/api/students/:id', async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log('Server online tại port 5000');
+// Root Health Check Route
+app.get('/', (req, res) => {
+  res.json({ message: 'Backend is running!' });
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server online tại port ${PORT}`);
+});
+
